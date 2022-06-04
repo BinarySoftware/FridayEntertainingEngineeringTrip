@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+from perlin_noise import PerlinNoise
 
 pygame.init()
 pygame.font.init()
@@ -15,6 +16,8 @@ pygame.display.set_caption("FEET")
 WIDTH = pygame.display.get_window_size()[0]/40
 HEIGHT = pygame.display.get_window_size()[0]/40
 STEP = pygame.display.get_window_size()[0]/40
+
+noise = PerlinNoise(octaves=10, seed=1)
 
 brick_img = pygame.image.load('brickstasy.png')
 brick_img = pygame.transform.scale(brick_img, (WIDTH+1, HEIGHT+1))
@@ -122,9 +125,11 @@ while RUN:
                                                             pygame.display.get_window_size()[0]-3*(WIDTH+1),
                                                             pygame.display.get_window_size()[1]-3*(WIDTH+1)))
         WINDOW.fill((0, 0, 0))
-        for i in range(int(pygame.display.get_window_size()[0]/WIDTH)):
-            for j in range(int(pygame.display.get_window_size()[1]/HEIGHT)):
-                brick_img.set_alpha(200)
+        x_pix = int(pygame.display.get_window_size()[0]/WIDTH)
+        y_pix = int(pygame.display.get_window_size()[1]/HEIGHT)
+        for i in range(x_pix):
+            for j in range(y_pix):
+                brick_img.set_alpha(255*noise([i/x_pix, j/y_pix]))
                 WINDOW.blit(brick_img, (i*WIDTH,j*HEIGHT))
                 if IS_DEADLY_BORDER and (i == 0 or i == int(pygame.display.get_window_size()[0] / WIDTH) - 1 or j == 0 or j == int(pygame.display.get_window_size()[1] / HEIGHT) - 1):
                     WINDOW.blit(borders_img, (i*WIDTH,j*HEIGHT))
@@ -162,9 +167,11 @@ while RUN:
 
     if not IS_ALIVE:
         WINDOW.fill((255, 255, 255))
-        for i in range(int(pygame.display.get_window_size()[0]/WIDTH)):
-            for j in range(int(pygame.display.get_window_size()[1]/HEIGHT)):
-                brick_img.set_alpha(120)
+        x_pix = int(pygame.display.get_window_size()[0]/WIDTH)
+        y_pix = int(pygame.display.get_window_size()[1]/HEIGHT)
+        for i in range(x_pix):
+            for j in range(y_pix):
+                brick_img.set_alpha(120 + 100*noise([i/x_pix, j/y_pix]))
                 brick_img = pygame.transform.rotate(brick_img, 90)
                 WINDOW.blit(brick_img, (i*WIDTH,j*HEIGHT))
         if score != 0:
