@@ -6,7 +6,7 @@ pygame.init()
 pygame.font.init()
 
 WINDOW = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-# WINDOW = pygame.display.set_mode((400, 400))
+# WINDOW = pygame.display.set_mode((1000, 800))
 pygame.display.set_caption("FEET")
 
 WIDTH = pygame.display.get_window_size()[0]/40
@@ -29,7 +29,7 @@ RUN = True
 IS_ALIVE = True
 IS_FOOD = True
 IS_SPECIAL_FOOD = False
-IS_DEADLY_BORDER = False
+IS_DEADLY_BORDER = True
 
 x = pygame.display.get_window_size()[0]/2
 y = pygame.display.get_window_size()[1]/2
@@ -113,17 +113,19 @@ while RUN:
             special_food_y = random.randint(100, pygame.display.get_window_size()[1]-100)
             t1 = t2
 
-        WINDOW.fill((0, 0, 0))
-        for i in range(int(pygame.display.get_window_size()[0]/WIDTH)):
-            for j in range(int(pygame.display.get_window_size()[1]/HEIGHT)):
-                brick_img.set_alpha(200)
-                WINDOW.blit(brick_img, (i*WIDTH,j*HEIGHT))
-
         if IS_DEADLY_BORDER:
             border = pygame.draw.rect(WINDOW, (0, 0, 255), (0, 0, pygame.display.get_window_size()[0], pygame.display.get_window_size()[1]))
             inner = pygame.draw.rect(WINDOW, (25, 25, 25), (WIDTH+0.5*WIDTH, WIDTH+0.5*WIDTH, 
                                                             pygame.display.get_window_size()[0]-3*(WIDTH+1),
                                                             pygame.display.get_window_size()[1]-3*(WIDTH+1)))
+        WINDOW.fill((0, 0, 0))
+        for i in range(int(pygame.display.get_window_size()[0]/WIDTH)):
+            for j in range(int(pygame.display.get_window_size()[1]/HEIGHT)):
+                brick_img.set_alpha(200)
+                WINDOW.blit(brick_img, (i*WIDTH,j*HEIGHT))
+                if IS_DEADLY_BORDER and (i == 0 or i == int(pygame.display.get_window_size()[0] / WIDTH) - 1 or j == 0 or j == int(pygame.display.get_window_size()[1] / HEIGHT) - 1):
+                    WINDOW.blit(borders_img, (i*WIDTH,j*HEIGHT))
+
 
         hud = font.render(f'Score: {score}', False, (250, 250, 250))
         WINDOW.blit(hud, (15,15))
