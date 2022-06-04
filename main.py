@@ -26,7 +26,7 @@ znek_head_img = pygame.transform.scale(znek_img, (WIDTH, HEIGHT))
 znek_body_img = pygame.transform.scale(znek_img, (WIDTH-2, HEIGHT-2))
 
 RUN = True
-IS_ALIVE = True
+IS_ALIVE = False
 IS_FOOD = True
 IS_SPECIAL_FOOD = False
 IS_DEADLY_BORDER = True
@@ -162,8 +162,18 @@ while RUN:
         for i in range(int(pygame.display.get_window_size()[0]/WIDTH)):
             for j in range(int(pygame.display.get_window_size()[1]/HEIGHT)):
                 brick_img.set_alpha(120)
+                brick_img = pygame.transform.rotate(brick_img, 90)
                 WINDOW.blit(brick_img, (i*WIDTH,j*HEIGHT))
-        hud = font.render(f'YOU LOST WITH SCORE: {score}. BUT THE GRIND SHALL NEVER STOP!', False, (0, 0, 0))
+        if score != 0:
+            hud = font.render(f'YOU LOST WITH SCORE: {score}. BUT THE GRIND SHALL NEVER STOP!', False, (0, 0, 0))
+        else:
+            hud = font.render(f'    Press 1 for BORDERED or 2 for UNLIMITED mode!!!!!1', False, (0, 0, 0))
+            if keys[pygame.K_1]:
+                IS_DEADLY_BORDER = True
+                IS_ALIVE = True
+            if keys[pygame.K_2]:
+                IS_DEADLY_BORDER = False
+                IS_ALIVE = True
         hud2 = font.render('Press Cmd+Q or Alt+F4 to quit.', False, (0, 0, 0))
         hud3 = font.render('Game By Maciej Mikołajek', False,  (100, 100, 100))
         hud4 = font.render('Assets by Natalia Michalska', False,  (100, 100, 100))
