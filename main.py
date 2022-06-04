@@ -1,4 +1,3 @@
-from cProfile import run
 import pygame
 import random
 import time
@@ -24,7 +23,10 @@ x = pygame.display.get_window_size()[0]/2
 y = pygame.display.get_window_size()[1]/2
 food_x = random.randint(100, pygame.display.get_window_size()[0]-100)
 food_y = random.randint(100, pygame.display.get_window_size()[1]-100)
+special_food_x = random.randint(100, pygame.display.get_window_size()[0]-100)
+special_food_y = random.randint(100, pygame.display.get_window_size()[1]-100)
 
+special_food = None
 food = None
 player = None
 border = None
@@ -39,6 +41,8 @@ last_positions = [(x, y)]
 direction = 0 # 0-u, 1-r, 2-b, 3-l
 
 font = pygame.font.SysFont('Avenir Next', 24)
+
+t1 = time.time()
 
 while RUN:
     keys = pygame.key.get_pressed()
@@ -75,7 +79,7 @@ while RUN:
                 y = 0
             if y < 0:
                 y = pygame.display.get_window_size()[1]
-        
+
         last_positions.append((x, y))
         if len(last_positions) > length:
             last_positions.pop(0)
@@ -89,6 +93,14 @@ while RUN:
                 delay -= 10
             IS_FOOD = True
 
+        t2 = time.time()
+
+        if not IS_SPECIAL_FOOD and t2 - t1 > 10:
+            IS_SPECIAL_FOOD = True
+            special_food_x = random.randint(100, pygame.display.get_window_size()[0]-100)
+            special_food_y = random.randint(100, pygame.display.get_window_size()[1]-100)
+            t1 = t2
+
         WINDOW.fill((0, 0, 0))
 
         if IS_DEADLY_BORDER:
@@ -99,6 +111,12 @@ while RUN:
 
         hud = font.render(f'Score: {score}', False, (250, 250, 250))
         WINDOW.blit(hud, (15,15))
+
+        if IS_SPECIAL_FOOD:
+            if t2-t1 > 4:
+                IS_SPECIAL_FOOD = False
+                t1 = t2
+            special_food = pygame.draw.rect(WINDOW, (255, 255, 0), (special_food_x, special_food_y, WIDTH, HEIGHT))
 
         food = pygame.draw.rect(WINDOW, (255, 0, 0), (food_x, food_y, WIDTH, HEIGHT))
         player = pygame.draw.rect(WINDOW, (0, 250, 0), (x, y, WIDTH, HEIGHT))
@@ -112,13 +130,18 @@ while RUN:
         if player.colliderect(food):
             IS_FOOD = False
 
+        if special_food and player.colliderect(special_food):
+            IS_SPECIAL_FOOD = False
+            score += 100
+            length += 1
+
         if IS_DEADLY_BORDER and player.colliderect(border) and not player.colliderect(inner):
             IS_ALIVE = False
 
     if not IS_ALIVE:
         WINDOW.fill((255, 255, 255))
         hud = font.render(f'YOU LOST WITH SCORE: {score}. BUT THE GRIND SHALL NEVER STOP!', False, (0, 0, 0))
-        hud2 = font.render(f'Press Cmd+Q or Alt+F4 to quit.', False, (0, 0, 0))
+        hud2 = font.render('Press Cmd+Q or Alt+F4 to quit.', False, (0, 0, 0))
         WINDOW.blit(hud, (pygame.display.get_window_size()[0]/2-350,pygame.display.get_window_size()[1]/2-50))
         WINDOW.blit(hud2, (pygame.display.get_window_size()[0]/2-150,pygame.display.get_window_size()[1]/2+50))
 
