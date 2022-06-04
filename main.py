@@ -5,6 +5,9 @@ import time
 pygame.init()
 pygame.font.init()
 
+soundObj = pygame.mixer.Sound('back.mp3')
+soundObj.play()
+
 WINDOW = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 # WINDOW = pygame.display.set_mode((1000, 800))
 pygame.display.set_caption("FEET")
