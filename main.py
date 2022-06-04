@@ -17,7 +17,7 @@ RUN = True
 IS_ALIVE = True
 IS_FOOD = True
 IS_SPECIAL_FOOD = False
-IS_DEADLY_BORDER = True
+IS_DEADLY_BORDER = False
 
 x = pygame.display.get_window_size()[0]/2
 y = pygame.display.get_window_size()[1]/2
@@ -52,13 +52,13 @@ while RUN:
             RUN = False
 
     if IS_ALIVE:
-        if keys[pygame.K_a] or keys[pygame.K_LEFT] and direction != 1:
+        if (keys[pygame.K_a] or keys[pygame.K_LEFT]) and direction != 1:
             direction = 3
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT] and direction != 3:
+        if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and direction != 3:
             direction = 1
-        if keys[pygame.K_w] or keys[pygame.K_UP] and direction != 2:
+        if (keys[pygame.K_w] or keys[pygame.K_UP]) and direction != 2:
             direction = 0
-        if keys[pygame.K_s] or keys[pygame.K_DOWN] and direction != 0:
+        if (keys[pygame.K_s] or keys[pygame.K_DOWN]) and direction != 0:
             direction = 2
 
         if direction == 0:
