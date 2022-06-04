@@ -167,7 +167,8 @@ while RUN:
         if score != 0:
             hud = font.render(f'YOU LOST WITH SCORE: {score}. BUT THE GRIND SHALL NEVER STOP!', False, (0, 0, 0))
         else:
-            hud = font.render(f'    Press 1 for BORDERED or 2 for UNLIMITED mode!!!!!1', False, (0, 0, 0))
+            hud = font.render('    Press 1 for BORDERED or 2 for UNLIMITED mode!!!!!1', False, (0, 0, 0))
+
             if keys[pygame.K_1]:
                 IS_DEADLY_BORDER = True
                 IS_ALIVE = True
