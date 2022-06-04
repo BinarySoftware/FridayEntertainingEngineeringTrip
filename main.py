@@ -13,6 +13,18 @@ WIDTH = pygame.display.get_window_size()[0]/40
 HEIGHT = pygame.display.get_window_size()[0]/40
 STEP = pygame.display.get_window_size()[0]/40
 
+brick_img = pygame.image.load('brickstasy.png')
+brick_img = pygame.transform.scale(brick_img, (WIDTH+1, HEIGHT+1))
+borders_img = pygame.image.load('border.png')
+borders_img = pygame.transform.scale(borders_img, (WIDTH, HEIGHT))
+food_img = pygame.image.load('food.png')
+food_img = pygame.transform.scale(food_img, (WIDTH, HEIGHT))
+special_food_img = pygame.image.load('special_food.png')
+special_food_img = pygame.transform.scale(special_food_img, (WIDTH, HEIGHT))
+znek_img = pygame.image.load('znek.png')
+znek_head_img = pygame.transform.scale(znek_img, (WIDTH, HEIGHT))
+znek_body_img = pygame.transform.scale(znek_img, (WIDTH-2, HEIGHT-2))
+
 RUN = True
 IS_ALIVE = True
 IS_FOOD = True
@@ -35,7 +47,7 @@ hud = None
 
 score = 0
 length = 3
-delay = 150
+delay = 100
 last_positions = [(x, y)]
 
 direction = 0 # 0-u, 1-r, 2-b, 3-l
@@ -102,6 +114,10 @@ while RUN:
             t1 = t2
 
         WINDOW.fill((0, 0, 0))
+        for i in range(int(pygame.display.get_window_size()[0]/WIDTH)):
+            for j in range(int(pygame.display.get_window_size()[1]/HEIGHT)):
+                brick_img.set_alpha(200)
+                WINDOW.blit(brick_img, (i*WIDTH,j*HEIGHT))
 
         if IS_DEADLY_BORDER:
             border = pygame.draw.rect(WINDOW, (0, 0, 255), (0, 0, pygame.display.get_window_size()[0], pygame.display.get_window_size()[1]))
@@ -116,14 +132,15 @@ while RUN:
             if t2-t1 > 4:
                 IS_SPECIAL_FOOD = False
                 t1 = t2
-            special_food = pygame.draw.rect(WINDOW, (255, 255, 0), (special_food_x, special_food_y, WIDTH, HEIGHT))
+            special_food = WINDOW.blit(special_food_img, (special_food_x, special_food_y))
 
-        food = pygame.draw.rect(WINDOW, (255, 0, 0), (food_x, food_y, WIDTH, HEIGHT))
-        player = pygame.draw.rect(WINDOW, (0, 250, 0), (x, y, WIDTH, HEIGHT))
+        food = WINDOW.blit(food_img, (food_x, food_y))
+        player = WINDOW.blit(znek_head_img, (x, y))
 
         for i in range(len(last_positions)-1):
-            col = 100*i/len(last_positions)
-            body_part = pygame.draw.rect(WINDOW, (0, 100+col, 0), (last_positions[i][0], last_positions[i][1], WIDTH-2, HEIGHT-2))
+            alpha = 120 + 120*i/len(last_positions)
+            znek_body_img.set_alpha(alpha)
+            body_part = WINDOW.blit(znek_body_img, (last_positions[i][0], last_positions[i][1]))
             if player.colliderect(body_part):
                  IS_ALIVE = False
 
@@ -140,9 +157,21 @@ while RUN:
 
     if not IS_ALIVE:
         WINDOW.fill((255, 255, 255))
+        for i in range(int(pygame.display.get_window_size()[0]/WIDTH)):
+            for j in range(int(pygame.display.get_window_size()[1]/HEIGHT)):
+                brick_img.set_alpha(120)
+                WINDOW.blit(brick_img, (i*WIDTH,j*HEIGHT))
         hud = font.render(f'YOU LOST WITH SCORE: {score}. BUT THE GRIND SHALL NEVER STOP!', False, (0, 0, 0))
         hud2 = font.render('Press Cmd+Q or Alt+F4 to quit.', False, (0, 0, 0))
-        WINDOW.blit(hud, (pygame.display.get_window_size()[0]/2-350,pygame.display.get_window_size()[1]/2-50))
-        WINDOW.blit(hud2, (pygame.display.get_window_size()[0]/2-150,pygame.display.get_window_size()[1]/2+50))
+        hud3 = font.render('Game By Maciej Mikołajek', False,  (100, 100, 100))
+        hud4 = font.render('Assets by Natalia Michalska', False,  (100, 100, 100))
+        hud5 = font.render('Plot and emotional damage by Maciej Jedynak', False, (100, 100, 100))
+        hud6 = font.render('This guy who gets credits for nothing: Jan Paluch', False,  (100, 100, 100))
+        WINDOW.blit(hud, (pygame.display.get_window_size()[0]/2-350,pygame.display.get_window_size()[1]/2-250))
+        WINDOW.blit(hud2, (pygame.display.get_window_size()[0]/2-150,pygame.display.get_window_size()[1]/2-150))
+        WINDOW.blit(hud3, (pygame.display.get_window_size()[0]/2-400,pygame.display.get_window_size()[1]/2+50))
+        WINDOW.blit(hud4, (pygame.display.get_window_size()[0]/2-400,pygame.display.get_window_size()[1]/2+100))
+        WINDOW.blit(hud5, (pygame.display.get_window_size()[0]/2-400,pygame.display.get_window_size()[1]/2+150))
+        WINDOW.blit(hud6, (pygame.display.get_window_size()[0]/2-400,pygame.display.get_window_size()[1]/2+200))
 
     pygame.display.update()
